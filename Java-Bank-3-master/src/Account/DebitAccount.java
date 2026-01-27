@@ -2,114 +2,102 @@ package Account;
 
 import Person.User;
 
-
+import java.io.Serial;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.Scanner;
+
+import static Account.registro.registros;
 
 public class DebitAccount extends BankAccount {
 
-    Scanner sc  = new Scanner(System.in);
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     public DebitAccount(String entity, String office, String accNumber, String dc, String IBAN, String accountAlias) {
         super(entity, office, accNumber, dc, IBAN, accountAlias);
     }
+
     public DebitAccount(String entity, String office, String accNumber, String dc, String IBAN) {
         super(entity, office, accNumber, dc, IBAN);
     }
 
     @Override
     public void deposit(int amount, BankAccount account) {
-
         account.balance += amount;
         System.out.println("Deposited " + amount);
-        System.out.println("New Balance: " + account.balance);
     }
 
     @Override
     public void withdraw(int amount, BankAccount account) {
-
-        if (account.balance <= 0 || account.balance - amount < 0){
+        if (amount > account.balance) {
             System.out.println("Insufficient funds");
+            return;
         }
-        else{
-            account.balance -= amount;
-            System.out.println("Operation successful");
-            System.out.println("New balance in " + account.accNumber + " is: " + account.balance);
-        }
+        account.balance -= amount;
+        System.out.println("Operation successful");
     }
 
     @Override
     public void transfer(double amount, BankAccount account) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter destination account number:");
+        String destinationAcc = sc.nextLine();
+        BankAccount destAcc = null;
 
-
-        try{
-            String sourceAcc =  account.accNumber;
-            System.out.println("Please enter the destination account number\n");
-            String destinationAcc =  sc.nextLine();
-            System.out.println("Please enter the amount to be transferred (With decimals)\n");
-            double ammount = sc.nextDouble();
-
-            if(ammount > account.balance){
-                System.out.println("Insufficient funds");
-            }
-            else{
-                account.balance -= ammount;
-                BankAccount destAcc = null;
-                for(int i = 0; i < accounts.size(); i++){
-                    if(accounts.get(i).accNumber.equals(destinationAcc)){
-                        accounts.get(i).balance += ammount;
-                        destAcc = accounts.get(i);
-                    }
-                }
-                System.out.println("Operation successful");
-                System.out.println("New balance in " + sourceAcc + " is: " + account.balance);
-                System.out.println("New balance in " + destinationAcc + " is: " + destAcc.balance);
+        for (BankAccount ba : BankAccount.bankAccounts) {
+            if (ba.accNumber.equals(destinationAcc)) {
+                destAcc = ba;
+                break;
             }
         }
-        catch(InputMismatchException e){
-            System.out.println(e.getMessage());
+
+        if (destAcc == null) {
+            System.out.println("Destination account not found.");
+            return;
         }
+
+        if (amount > account.balance) {
+            System.out.println("Insufficient funds.");
+            return;
+        }
+        String IBANT=account.IBAN;
+        String IBANR=destAcc.IBAN;
+        double balanceAntesT= account.balance;
+        double balanceAntesR=destAcc.balance;
+        String tipo="transfer";
+        account.balance -= amount;
+        destAcc.balance += amount;
+        double balanceDespuesT= account.balance;
+        double balanceDespuesR=destAcc.balance;
+        registro r=new registro(amount,IBANT, IBANR,balanceDespuesT,balanceAntesT,tipo,balanceDespuesR,balanceAntesR);
+        registros.add(r);
+        System.out.println("Transfer successful.");
+        registro.toStringTransferencia();
     }
 
     @Override
     public void rechargeSIM(int amount, BankAccount account) {
-        System.out.println("Input the destination phone number\n");
-        try{
-            String number =  sc.nextLine();
-            while( number.length() != 9){
-                System.out.println("Please enter a valid phone number (9 digits)\n");
-                number = sc.nextLine();
-            }
-        } catch (InputMismatchException e) {
-            System.out.println(e.getMessage());
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter phone number:");
+        String number = sc.nextLine();
+
+        if (number.length() != 9) {
+            System.out.println("Invalid number.");
+            return;
         }
+
+        if (amount > account.balance) {
+            System.out.println("Insufficient funds.");
+            return;
+        }
+
+        account.balance -= amount;
+        System.out.println("Recharge successful.");
     }
 
     @Override
-    public void selectAccount(User user) {
-
-    }
+    public void selectAccount(User user) {}
 
     @Override
-    public void selectAccount(User user, ArrayList<BankAccount> bankAccounts) {
-
-        BankAccount foundBankAccount = null;
-        System.out.println("Select the account you want to use by typing the number of the option");
-        for(int i = 0; i < BankAccount.bankAccounts.size(); i++) {
-            String aliasBA = BankAccount.bankAccounts.get(i).accountAlias;
-            System.out.println("Option " + (i + 1) + ": " + aliasBA);
-        }
-        try {
-            int option = sc.nextInt();
-            sc.nextLine();
-            foundBankAccount = BankAccount.bankAccounts.get(option - 1);
-            System.out.println("Selected account: " + foundBankAccount.accNumber + " Balance: " + foundBankAccount.balance);
-
-        }
-        catch (InputMismatchException e) {
-            System.out.println(e.getMessage());
-        }
-
-    }
+    public void selectAccount(User user, ArrayList<BankAccount> bankAccounts) {}
 }

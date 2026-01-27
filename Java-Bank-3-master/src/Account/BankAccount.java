@@ -1,44 +1,54 @@
 package Account;
+
 import Person.User;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public abstract class BankAccount implements Accounting {
-    public static ArrayList<BankAccount> bankAccounts = new ArrayList<>();
-   public String entity="9999", office="8888";
-   public String dc="", accNumber="";
-   public String IBAN="";
-   public String accountAlias="";
-   public double balance=0.0;
-   int numNewAccount=0;
-   ArrayList<BankAccount> accounts=new ArrayList<BankAccount>();
-   Scanner sc =new Scanner(System.in);
+public abstract class BankAccount implements Serializable {
 
-    public  BankAccount(String entity, String office, String accNumber, String dc, String IBAN, String accountAlias) {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    // LISTA GLOBAL ÚNICA
+    public static ArrayList<BankAccount> bankAccounts = new ArrayList<>();
+
+    public String entity = "9999";
+    public String office = "8888";
+    public String dc = "";
+    public String accNumber = "";
+    public String IBAN = "";
+    public String accountAlias = "";
+    public double balance = 0.0;
+
+    int NumAuto = 0;
+
+    public BankAccount(String entity, String office, String accNumber, String dc, String IBAN, String accountAlias) {
         this.entity = entity;
         this.office = office;
         this.accNumber = accNumber;
         this.dc = dc;
         this.IBAN = IBAN;
         this.accountAlias = accountAlias;
-        this.balance=0.0;
     }
+
     public BankAccount(String entity, String office, String accNumber, String dc, String IBAN) {
-        this.entity = entity;
-        this.office = office;
-        this.accNumber = accNumber;
-        this.dc = dc;
-        this.IBAN = IBAN;
-        this.accountAlias = "Account "+ accNumber;
-        this.balance=0.0;
+        this(entity, office, accNumber, dc, IBAN, "Account " + accNumber);
+    }
+
+    @Override
+    public String toString() {
+        return "Alias: " + accountAlias + " | IBAN: " + IBAN + " | Balance: " + balance;
     }
 
     public static String calcDC(String entidad, String oficina, String cuenta) {
         entidad = String.format("%04d", Integer.parseInt(entidad));
         oficina = String.format("%04d", Integer.parseInt(oficina));
-        cuenta  = String.format("%010d", Long.parseLong(cuenta));
+        cuenta = String.format("%010d", Long.parseLong(cuenta));
 
         int[] w1 = {4,8,5,10,9,7,3,6};
         int[] w2 = {1,2,4,8,5,10,9,7,3,6};
@@ -63,15 +73,14 @@ public abstract class BankAccount implements Accounting {
     }
 
     public static String calcIBAN(String entity, String office, String accNumber) {
-        String dc  = calcDC(entity, office, accNumber);
+        String dc = calcDC(entity, office, accNumber);
 
         entity = String.format("%04d", Integer.parseInt(entity));
         office = String.format("%04d", Integer.parseInt(office));
-        accNumber  = String.format("%010d", Long.parseLong(accNumber));
+        accNumber = String.format("%010d", Long.parseLong(accNumber));
 
         String bban = entity + office + dc + accNumber;
 
-        // ES -> 14 28, más "00"
         String numeric = bban + "142800";
 
         BigInteger num = new BigInteger(numeric);
@@ -82,94 +91,48 @@ public abstract class BankAccount implements Accounting {
         return "ES" + cdStr + bban;
     }
 
-    public  void  createBankAccount() {
-        BankAccount newBankAccount;
-        String entity="", office="", dc="", accNumber="", IBAN="", alias ="";
+    public void createBankAccount() {
+        Scanner sc = new Scanner(System.in);
+        NumAuto = bankAccounts.size();
 
-        entity = getEntity();
-        office = getOffice();
+        System.out.println("Enter entity code (4 digits):");
+        entity = sc.nextLine();
+
+        System.out.println("Enter office code (4 digits):");
+        office = sc.nextLine();
+
+        DecimalFormat formato = new DecimalFormat("0000000000");
+        accNumber = formato.format(NumAuto);
 
         dc = calcDC(entity, office, accNumber);
         IBAN = calcIBAN(entity, office, accNumber);
-        alias = changeAccountAlias();
-        System.out.println("Your account has been created");
 
+        accountAlias = changeAccountAlias();
+
+        bankAccounts.add(this);
+
+        System.out.println("Account created successfully!");
+        System.out.println("IBAN: " + IBAN);
+        System.out.println("Alias: " + accountAlias);
     }
 
-    public String changeAccountAlias(){
-        String alias ="";
-        System.out.println("Do you want to give an alias to your account?");
+    public String changeAccountAlias() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Do you want to give an alias to your account? (yes/no)");
         String check = sc.nextLine();
-        if (check.equalsIgnoreCase("yes") || check.equalsIgnoreCase("si")) {
-            System.out.println("Introduce the account alias: ");
-            alias = sc.nextLine();
+
+        if (check.equalsIgnoreCase("yes")) {
+            System.out.println("Enter alias:");
+            return sc.nextLine();
         }
-        if(alias.isEmpty()){
-            System.out.println("You have not entered an alias. The account name will default to its number.");
-            alias = "Account " + IBAN;
-        }
-        else {
-            alias = check;
-        }
-        return alias;
-    }
 
-
-    /// Getters y Setters
-
-    public String getEntity(){
-        return this.entity;
-
-    }
-    public String getOffice(){
-        return this.office;
-    }
-
-    public String getDc() {
-        return dc;
-    }
-
-    public String getAccNumber() {
-        return accNumber;
-    }
-
-    public String getIBAN() {
-        return IBAN;
-    }
-
-    public double getBalance() {
-        return balance;
-    }
-
-    public void setDc(String dc) {
-        this.dc = dc;
-    }
-
-    public void setAccNumber(String accNumber) {
-        this.accNumber = accNumber;
-    }
-
-    public void setIBAN(String IBAN) {
-        this.IBAN = IBAN;
-    }
-
-    public void setAccountAlias(String accountAlias) {
-        this.accountAlias = accountAlias;
-    }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
+        return "Account " + accNumber;
     }
 
     public abstract void deposit(int amount, BankAccount account);
-
     public abstract void withdraw(int amount, BankAccount account);
-
     public abstract void transfer(double amount, BankAccount account);
-
     public abstract void rechargeSIM(int amount, BankAccount account);
-
     public abstract void selectAccount(User user);
-
     public abstract void selectAccount(User user, ArrayList<BankAccount> bankAccounts);
 }
