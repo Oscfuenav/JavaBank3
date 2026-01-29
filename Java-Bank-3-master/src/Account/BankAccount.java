@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public abstract class BankAccount implements Serializable {
-
+    public String userid = "";
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -27,22 +27,23 @@ public abstract class BankAccount implements Serializable {
 
     int NumAuto = 0;
 
-    public BankAccount(String entity, String office, String accNumber, String dc, String IBAN, String accountAlias) {
+    public BankAccount(String entity, String office, String accNumber, String dc, String IBAN, String accountAlias, String userid) {
         this.entity = entity;
         this.office = office;
         this.accNumber = accNumber;
         this.dc = dc;
         this.IBAN = IBAN;
         this.accountAlias = accountAlias;
+        this.userid = userid;
     }
 
-    public BankAccount(String entity, String office, String accNumber, String dc, String IBAN) {
-        this(entity, office, accNumber, dc, IBAN, "Account " + accNumber);
+    public BankAccount(String entity, String office, String accNumber, String dc, String IBAN, String userid) {
+        this(entity, office, accNumber, dc, IBAN, "Account " + accNumber, userid);
     }
 
     @Override
     public String toString() {
-        return "Alias: " + accountAlias + " | IBAN: " + IBAN + " | Balance: " + balance;
+        return "Alias: " + accountAlias + " | IBAN: " + IBAN + " | Balance: " + balance + " | ID: " + userid;
     }
 
     public static String calcDC(String entidad, String oficina, String cuenta) {

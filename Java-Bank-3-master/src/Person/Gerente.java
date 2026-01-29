@@ -67,7 +67,7 @@ public class Gerente extends Person implements Serializable {
      * </p>
      */
     @Override
-    public void accountMenu() {
+    public void accountMenu(User currentUser) {
         Scanner scan2 = new Scanner(System.in);
         int option = 0;
         System.out.println("Welcome " + name);
@@ -238,7 +238,7 @@ public class Gerente extends Person implements Serializable {
         }
         int numUser= users.size();
         String userid=(numUser+"U");
-        User newUser = new User(name, password, birthdate,userid );
+        User newUser = new User(name, password, birthdate, userid);
 
         System.out.println("Client created:");
         System.out.println("Name: " + name);

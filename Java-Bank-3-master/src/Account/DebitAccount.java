@@ -9,16 +9,17 @@ import java.util.Scanner;
 import static Account.registro.registros;
 
 public class DebitAccount extends BankAccount {
-
+    public String userid = "";
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public DebitAccount(String entity, String office, String accNumber, String dc, String IBAN, String accountAlias) {
+    public DebitAccount(String entity, String office, String accNumber, String dc, String IBAN, String accountAlias, String userid) {
         super(entity, office, accNumber, dc, IBAN, accountAlias);
+        this.userid = userid;
     }
 
-    public DebitAccount(String entity, String office, String accNumber, String dc, String IBAN) {
-        super(entity, office, accNumber, dc, IBAN);
+    public DebitAccount(String entity, String office, String accNumber, String dc, String IBAN, String userid) {
+        super(entity, office, accNumber, dc, IBAN, userid);
     }
 
     @Override
@@ -60,7 +61,7 @@ public class DebitAccount extends BankAccount {
             System.out.println("Insufficient funds.");
             return;
         }
-        String IBANT=account.IBAN;
+        String IBAN=account.IBAN;
         String IBANR=destAcc.IBAN;
         double balanceAntesT= account.balance;
         double balanceAntesR=destAcc.balance;
@@ -69,7 +70,7 @@ public class DebitAccount extends BankAccount {
         destAcc.balance += amount;
         double balanceDespuesT= account.balance;
         double balanceDespuesR=destAcc.balance;
-        registro r=new registro(amount,IBANT, IBANR,balanceDespuesT,balanceAntesT,tipo,balanceDespuesR,balanceAntesR);
+        registro r=new registro(amount,IBAN, IBANR,balanceDespuesT,balanceAntesT,tipo,balanceDespuesR,balanceAntesR);
         registros.add(r);
         System.out.println("Transfer successful.");
         registro.toStringTransferencia();

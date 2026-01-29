@@ -80,5 +80,5 @@ public abstract class Person implements Serializable {
     /**
      * Muestra el menú correspondiente al tipo de persona (usuario, empleado o gerente).
      */
-    public abstract void accountMenu();
+    public abstract void accountMenu(User currentUser);
 }

@@ -28,24 +28,24 @@ public class AccessScreen {
 
         while (!exit) {
             System.out.println("\n=== JAVA BANK ===");
-            System.out.println("1. Create Account");
-            System.out.println("2. Log In");
-            System.out.println("3. Close Application");
+            //System.out.println("1. Create Account");
+            System.out.println("1. Log In");
+            System.out.println("2. Close Application");
             System.out.print("Choose option: ");
 
             int option = sc.nextInt();
             sc.nextLine(); // limpiar buffer
 
             switch (option) {
-                case 1:
-                    crearCuenta();
-                    break;
+                //case 1:
+                    //crearCuenta();
+                    //break;
 
-                case 2:
+                case 1:
                     login();
                     break;
 
-                case 3:
+                case 2:
                     GestionFicheros.guardarClientes(gerentes, employees, users, bankAccounts, registros);
                     System.out.println("Data saved. Closing application...");
                     exit = true;
@@ -97,7 +97,7 @@ public class AccessScreen {
 
             if (pass.equals(loggedPerson.password)) {
                 System.out.println("Login successful.");
-                loggedPerson.accountMenu();
+                loggedPerson.accountMenu(currentUser);
                 return;
             } else {
                 System.out.println("Wrong password.");

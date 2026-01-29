@@ -67,7 +67,7 @@ public class Employee extends Person implements Serializable {
      * </p>
      */
     @Override
-    public void accountMenu() {
+    public void accountMenu(User currentUser) {
         Scanner scan2 = new Scanner(System.in);
         int option=0;
         while(option!=6){

@@ -6,7 +6,7 @@ import java.io.Serial;
 import java.util.ArrayList;
 
 public class CreditAccount extends BankAccount {
-
+    public String userid = "";
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -14,15 +14,16 @@ public class CreditAccount extends BankAccount {
     double creditPercentage = 0.0;
 
     public CreditAccount(String entity, String office, String accNumber, String dc, String IBAN,
-                         String accountAlias, double creditLimit, double creditPercentage){
+                         String accountAlias, double creditLimit, double creditPercentage, String userid) {
         super(entity, office, accNumber, dc, IBAN, accountAlias);
         this.creditLimit = creditLimit;
         this.creditPercentage = creditPercentage;
+        this.userid = userid;
     }
 
     public CreditAccount(String entity, String office, String accNumber, String dc, String IBAN,
-                         double creditLimit, double creditPercentage){
-        super(entity, office, accNumber, dc, IBAN);
+                         double creditLimit, double creditPercentage, String userid) {
+        super(entity, office, accNumber, dc, IBAN, userid);
         this.creditLimit = creditLimit;
         this.creditPercentage = creditPercentage;
     }

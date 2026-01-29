@@ -32,12 +32,12 @@ public class User extends Person implements Serializable {
     }
 
     @Override
-    public void accountMenu() {
+    public void accountMenu(User currentUser) {
 
         Scanner scan2 = new Scanner(System.in);
         int option = 0;
 
-        while(option != 6){
+        while(option != 7){
 
             System.out.println("\nWelcome " + name);
             System.out.println("1. Create BankAccount");
@@ -45,8 +45,8 @@ public class User extends Person implements Serializable {
             System.out.println("3. Withdraw");
             System.out.println("4. Transfer");
             System.out.println("5. Recharge SIM");
-            System.out.println("6. Log Out");
-
+            System.out.println("6. Ver Registros");
+            System.out.println("7. Log out");
             option = scan2.nextInt();
             scan2.nextLine();
 
@@ -59,7 +59,7 @@ public class User extends Person implements Serializable {
                     scan2.nextLine();
 
                     if (type == 1) {
-                        DebitAccount d = new DebitAccount("","","","", "");
+                        DebitAccount d = new DebitAccount("","","","", "", currentUser.userid);
                         d.createBankAccount();
                     } else {
                         System.out.println("Credit limit:");
@@ -68,7 +68,7 @@ public class User extends Person implements Serializable {
                         double perc = scan2.nextDouble();
                         scan2.nextLine();
 
-                        CreditAccount c = new CreditAccount("","","","", "", limit, perc);
+                        CreditAccount c = new CreditAccount("","","","", "", limit, perc, currentUser.userid);
                         c.createBankAccount();
                     }
                     break;
@@ -80,13 +80,19 @@ public class User extends Person implements Serializable {
                     }
 
                     for (int i = 0; i < BankAccount.bankAccounts.size(); i++) {
-                        System.out.println((i+1) + ". " + BankAccount.bankAccounts.get(i).accountAlias);
+                        if (currentUser.userid.equals(BankAccount.bankAccounts.get(i).userid)) {
+                        System.out.println((i+1) + ". " + BankAccount.bankAccounts.get(i).IBAN);
+                        }
                     }
-
-                    int Elegido = scan2.nextInt();
+                    System.out.println("Escribe el IBAN: ");
+                    String Elegido = scan2.nextLine();
                     scan2.nextLine();
-
-                    BankAccount opcion = BankAccount.bankAccounts.get(Elegido - 1);
+                    BankAccount opcion = null;
+                    for (int i = 0; i < BankAccount.bankAccounts.size(); i++) {
+                        if (Elegido.equals(BankAccount.bankAccounts.get(i).IBAN)) {
+                            opcion = BankAccount.bankAccounts.get(i);
+                        }
+                    }
                     double balanceantes =opcion.balance;
 
                     System.out.println("Amount:");
@@ -108,13 +114,20 @@ public class User extends Person implements Serializable {
                     }
 
                     for (int i = 0; i < BankAccount.bankAccounts.size(); i++) {
-                        System.out.println((i+1) + ". " + BankAccount.bankAccounts.get(i).accountAlias);
+                        if (currentUser.userid.equals(BankAccount.bankAccounts.get(i).userid)) {
+                            System.out.println((i+1) + ". " + BankAccount.bankAccounts.get(i).IBAN);
+
+                        }
                     }
-
-                    int opcion2 = scan2.nextInt();
+                    System.out.println("Escribe el IBAN: ");
+                    String opcion2 = scan2.nextLine();
                     scan2.nextLine();
-
-                    BankAccount opcion1 = BankAccount.bankAccounts.get(opcion2 - 1);
+                    BankAccount opcion1 = null;
+                    for (int i = 0; i < BankAccount.bankAccounts.size(); i++) {
+                        if (opcion2.equals(BankAccount.bankAccounts.get(i).IBAN)) {
+                            opcion1 = BankAccount.bankAccounts.get(i);
+                        }
+                    }
                     balanceantes=opcion1.balance;
                     System.out.println("Amount:");
                     int sacar = scan2.nextInt();
@@ -135,16 +148,26 @@ public class User extends Person implements Serializable {
                     }
 
                     for (int i = 0; i < BankAccount.bankAccounts.size(); i++) {
-                        System.out.println((i+1) + ". " + BankAccount.bankAccounts.get(i).accountAlias +" Money (Enrique): " +BankAccount.bankAccounts.get(i).balance);
+                        if (currentUser.userid.equals(BankAccount.bankAccounts.get(i).userid)) {
+                            System.out.println((i+1) + ". " + BankAccount.bankAccounts.get(i).IBAN +" Money (Enrique): " +BankAccount.bankAccounts.get(i).balance);
+                        }
                     }
-                    int opcionT = scan2.nextInt();
+                    System.out.println("Escribe el iban: ");
+                    String opcionT = scan2.nextLine();
                     scan2.nextLine();
-
-                    BankAccount cuentatrans = BankAccount.bankAccounts.get(opcionT - 1);
+                    BankAccount cuentatrans = null;
+                    for (int i = 0; i < BankAccount.bankAccounts.size(); i++) {
+                        if (opcionT.equals(BankAccount.bankAccounts.get(i).IBAN)) {
+                            cuentatrans = BankAccount.bankAccounts.get(i);
+                        }
+                    }
 
                     System.out.println("Amount:");
                     double dinero = scan2.nextDouble();
                     scan2.nextLine();
+                    for (int x = 0;  x < BankAccount.bankAccounts.size(); x++) {
+                        System.out.println((x+1) + ". " + BankAccount.bankAccounts.get(x).accNumber);
+                    }
                     cuentatrans.transfer(dinero,cuentatrans);
 
                     break;
@@ -167,8 +190,20 @@ public class User extends Person implements Serializable {
 
                     simAcc.rechargeSIM(simAmount, simAcc);
                     break;
-
                 case 6:
+                    for (int i = 0; i < BankAccount.bankAccounts.size(); i++) {
+                        if (currentUser.userid.equals(BankAccount.bankAccounts.get(i).userid)) {
+                            System.out.println((i+1) + ". " + BankAccount.bankAccounts.get(i).IBAN);
+
+                        }
+                    }
+                    Scanner scan = new Scanner(System.in);
+                    System.out.println("Dime un IBAN de la cuenta quieres ver: ");
+                    String enriqueIban = scan.nextLine();
+                    System.out.println("\n--- REGISTROS ---");
+                    registro.toStringDepo2(enriqueIban);
+                    break;
+                case 7:
                     System.out.println("Logging out...");
                     break;
             }
