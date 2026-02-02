@@ -1,6 +1,9 @@
 package Person;
 
+import Account.registro;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Clase abstracta que representa a una persona dentro del sistema bancario.
@@ -80,5 +83,5 @@ public abstract class Person implements Serializable {
     /**
      * Muestra el menú correspondiente al tipo de persona (usuario, empleado o gerente).
      */
-    public abstract void accountMenu(User currentUser);
+    public abstract void accountMenu(User currentUser, ArrayList<registro> registros);
 }

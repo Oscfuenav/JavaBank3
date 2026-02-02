@@ -12,20 +12,24 @@ public class CreditAccount extends BankAccount {
 
     double creditLimit = 0.0;
     double creditPercentage = 0.0;
+    double maxDeuda = 0;
+    double deudaCredit = 0.0;
+    public String tipo = "credit";
 
     public CreditAccount(String entity, String office, String accNumber, String dc, String IBAN,
-                         String accountAlias, double creditLimit, double creditPercentage, String userid) {
+                         String accountAlias, String userid, double maxDeuda, double deudaCredit, String tipo) {
         super(entity, office, accNumber, dc, IBAN, accountAlias);
-        this.creditLimit = creditLimit;
-        this.creditPercentage = creditPercentage;
         this.userid = userid;
+        this.maxDeuda = maxDeuda;
+        this.deudaCredit = deudaCredit;
+        this.tipo = tipo;
     }
 
-    public CreditAccount(String entity, String office, String accNumber, String dc, String IBAN,
-                         double creditLimit, double creditPercentage, String userid) {
+    public CreditAccount(String entity, String office, String accNumber, String dc, String IBAN, String userid, double maxDeuda, double deudaCredit, String tipo) {
         super(entity, office, accNumber, dc, IBAN, userid);
-        this.creditLimit = creditLimit;
-        this.creditPercentage = creditPercentage;
+        this.maxDeuda = maxDeuda;
+        this.deudaCredit = deudaCredit;
+        this.tipo = tipo;
     }
 
     @Override

@@ -32,48 +32,25 @@ public class User extends Person implements Serializable {
     }
 
     @Override
-    public void accountMenu(User currentUser) {
+    public void accountMenu(User currentUser, ArrayList<registro>registros) {
 
         Scanner scan2 = new Scanner(System.in);
         int option = 0;
 
-        while(option != 7){
+        while(option != 6){
 
             System.out.println("\nWelcome " + name);
-            System.out.println("1. Create BankAccount");
-            System.out.println("2. Deposit");
-            System.out.println("3. Withdraw");
-            System.out.println("4. Transfer");
-            System.out.println("5. Recharge SIM");
-            System.out.println("6. Ver Registros");
-            System.out.println("7. Log out");
+            System.out.println("1. Deposit");
+            System.out.println("2. Withdraw");
+            System.out.println("3. Transfer");
+            System.out.println("4. Recharge SIM");
+            System.out.println("5. Ver Registros");
+            System.out.println("6. Log out");
             option = scan2.nextInt();
-            scan2.nextLine();
 
             switch (option){
-
                 case 1:
-                    System.out.println("1. Debit");
-                    System.out.println("2. Credit");
-                    int type = scan2.nextInt();
-                    scan2.nextLine();
-
-                    if (type == 1) {
-                        DebitAccount d = new DebitAccount("","","","", "", currentUser.userid);
-                        d.createBankAccount();
-                    } else {
-                        System.out.println("Credit limit:");
-                        double limit = scan2.nextDouble();
-                        System.out.println("Credit percentage:");
-                        double perc = scan2.nextDouble();
-                        scan2.nextLine();
-
-                        CreditAccount c = new CreditAccount("","","","", "", limit, perc, currentUser.userid);
-                        c.createBankAccount();
-                    }
-                    break;
-
-                case 2:
+                    Scanner sc = new Scanner(System.in);
                     if (BankAccount.bankAccounts.isEmpty()) {
                         System.out.println("No accounts.");
                         break;
@@ -85,19 +62,17 @@ public class User extends Person implements Serializable {
                         }
                     }
                     System.out.println("Escribe el IBAN: ");
-                    String Elegido = scan2.nextLine();
-                    scan2.nextLine();
+                    String Elegido = sc.nextLine();
                     BankAccount opcion = null;
                     for (int i = 0; i < BankAccount.bankAccounts.size(); i++) {
                         if (Elegido.equals(BankAccount.bankAccounts.get(i).IBAN)) {
                             opcion = BankAccount.bankAccounts.get(i);
                         }
                     }
-                    double balanceantes =opcion.balance;
+                    double balanceantes = opcion.balance;
 
                     System.out.println("Amount:");
                     int deposito = scan2.nextInt();
-                    scan2.nextLine();
                     opcion.deposit(deposito, opcion);
                     double balancedespues=opcion.balance;
                     registro r=new registro(deposito, opcion.IBAN, balancedespues,balanceantes,"Depositar");
@@ -107,7 +82,8 @@ public class User extends Person implements Serializable {
                     }
                     break;
 
-                case 3:
+                case 2:
+                    Scanner scan3 = new Scanner(System.in);
                     if (BankAccount.bankAccounts.isEmpty()) {
                         System.out.println("No accounts.");
                         break;
@@ -116,32 +92,47 @@ public class User extends Person implements Serializable {
                     for (int i = 0; i < BankAccount.bankAccounts.size(); i++) {
                         if (currentUser.userid.equals(BankAccount.bankAccounts.get(i).userid)) {
                             System.out.println((i+1) + ". " + BankAccount.bankAccounts.get(i).IBAN);
-
                         }
                     }
                     System.out.println("Escribe el IBAN: ");
-                    String opcion2 = scan2.nextLine();
-                    scan2.nextLine();
-                    BankAccount opcion1 = null;
-                    for (int i = 0; i < BankAccount.bankAccounts.size(); i++) {
-                        if (opcion2.equals(BankAccount.bankAccounts.get(i).IBAN)) {
-                            opcion1 = BankAccount.bankAccounts.get(i);
+                    String opcion2 = scan3.nextLine();
+                    BankAccount cuentaSeleccionada = null;
+                    for (BankAccount acc : BankAccount.bankAccounts) {
+                        if (opcion2.equals(acc.IBAN)) {
+                            cuentaSeleccionada = acc;
+                            break;
                         }
                     }
-                    balanceantes=opcion1.balance;
+
                     System.out.println("Amount:");
-                    int sacar = scan2.nextInt();
-                    scan2.nextLine();
-                    opcion1.withdraw(sacar,opcion1);
-                    balancedespues=opcion1.balance;
-                    registro d=new registro(sacar, opcion1.IBAN, balancedespues,balanceantes,"Retirar");
-                    registros.add(d);
-                    for (registro rr : registros) {
-                        System.out.println(rr);
+                    int sacar = scan3.nextInt();
+
+                    if (cuentaSeleccionada instanceof CreditAccount) {
+                        CreditAccount credit = (CreditAccount) cuentaSeleccionada;
+
+                        balanceantes = credit.balance;
+                        credit.withdraw(sacar, credit);
+                        balancedespues = credit.balance;
+
+                        registro d = new registro(
+                                sacar, credit.IBAN, balancedespues, balanceantes, "Retiro"
+                        );
+                        registros.add(d);
+
+                    } else if (cuentaSeleccionada instanceof DebitAccount) {
+                        DebitAccount debit = (DebitAccount) cuentaSeleccionada;
+
+                        balanceantes = debit.balance;
+                        debit.withdraw(sacar, debit);
+                        balancedespues = debit.balance;
+
+                        registro d = new registro(
+                                sacar, debit.IBAN, balancedespues, balanceantes, "Retiro"
+                        );
+                        registros.add(d);
                     }
                     break;
-
-                case 4:
+                case 3:
                     if (BankAccount.bankAccounts.isEmpty()) {
                         System.out.println("No accounts.");
                         break;
@@ -172,7 +163,7 @@ public class User extends Person implements Serializable {
 
                     break;
 
-                case 5:
+                case 4:
                     if (BankAccount.bankAccounts.isEmpty()) {
                         System.out.println("No accounts.");
                         break;
@@ -190,7 +181,7 @@ public class User extends Person implements Serializable {
 
                     simAcc.rechargeSIM(simAmount, simAcc);
                     break;
-                case 6:
+                case 5:
                     for (int i = 0; i < BankAccount.bankAccounts.size(); i++) {
                         if (currentUser.userid.equals(BankAccount.bankAccounts.get(i).userid)) {
                             System.out.println((i+1) + ". " + BankAccount.bankAccounts.get(i).IBAN);
@@ -203,7 +194,7 @@ public class User extends Person implements Serializable {
                     System.out.println("\n--- REGISTROS ---");
                     registro.toStringDepo2(enriqueIban);
                     break;
-                case 7:
+                case 6:
                     System.out.println("Logging out...");
                     break;
             }

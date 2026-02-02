@@ -97,7 +97,7 @@ public class AccessScreen {
 
             if (pass.equals(loggedPerson.password)) {
                 System.out.println("Login successful.");
-                loggedPerson.accountMenu(currentUser);
+                loggedPerson.accountMenu(currentUser, registros);
                 return;
             } else {
                 System.out.println("Wrong password.");

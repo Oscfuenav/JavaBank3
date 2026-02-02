@@ -20,6 +20,11 @@ import static Account.BankAccount.bankAccounts;
 public class Main {
 
     public static void main(String[] args) {
+        GestionFicheros.Borrar();
+        Gerente g1 = new Gerente("a", "a", "a", "0G");
+        gerentes.add(g1);
+        User u1 = new User("a", "a", "a", "0U");
+        users.add(u1);
         GestionFicheros gestionFicheros = new GestionFicheros();
         GestionFicheros.cargarTodo(gerentes, employees, users, bankAccounts, registros);
         gestionFicheros.mostrarClientes(gerentes, employees, users, bankAccounts, registros);

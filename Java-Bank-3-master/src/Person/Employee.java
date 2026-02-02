@@ -1,6 +1,9 @@
 package Person;
 
 import Account.BankAccount;
+import Account.CreditAccount;
+import Account.DebitAccount;
+import Account.registro;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -67,32 +70,78 @@ public class Employee extends Person implements Serializable {
      * </p>
      */
     @Override
-    public void accountMenu(User currentUser) {
+    public void accountMenu(User currentUser, ArrayList<registro>registros) {
         Scanner scan2 = new Scanner(System.in);
         int option=0;
-        while(option!=6){
+        while(option!=5){
             System.out.println("Welcome " + name);
             System.out.println("1. Create Client");
-            System.out.println("2. Make a deposit");
-            System.out.println("3. Withdraw");
-            System.out.println("4. Transfer Money");
-            System.out.println("5. Recharge SIM card");
-            System.out.println("6. Log Out");
+            System.out.println("2. Ver registros");
+            System.out.println("3. Transfer Money");
+            System.out.println("4. Create BankAccount");
+            System.out.println("5. Log Out");
             System.out.println("Please enter your numbered choice (1, 2, 3, 4, 5 or 6)");
             option = scan2.nextInt();
             switch (option){
                 case 1:
                     clientRegister();
                     break;
+                //case 2:
+                    //break;
                 case 2:
+                    System.out.println("\n--- REGISTROS ---");
+                    for (registro r : registros) System.out.println(r);
+                    registro.toStringTransferencia();
                     break;
                 case 3:
+                    habilitarUser(users);
                     break;
                 case 4:
+                    Scanner sc = new Scanner(System.in);
+                    System.out.println("Dime el id del usuario que quiere crear la cuenta: ");
+                    String userid = sc.nextLine();
+                    User userEncontrado = null;
+                    for (int i = 0; i < users.size(); i++) {
+                        if (users.get(i).userid.equals(userid)) {
+                            userEncontrado = users.get(i);
+                        } else {
+                            System.out.println("No existe.");
+                        }
+                    }
+
+                    System.out.println("1. Debit");
+                    System.out.println("2. Credit");
+                    int type = sc.nextInt();
+
+                    if (type == 1) {
+                        String tipo = "debit";
+                        DebitAccount d = new DebitAccount("","","","", "", userEncontrado.userid, "debit");
+                        d.createBankAccount(tipo);
+                    } else {
+                        String tipo = "credit";
+                        System.out.println("Elige tu cuenta de credito: ");
+                        System.out.println("1. 500€ de deuda.");
+                        System.out.println("2. 1000€ de dueda.");
+                        System.out.println("3. 5000€ de dueda.");
+                        System.out.println("Escribe 1, 2 o 3");
+                        int opcion = sc.nextInt();
+                        if (opcion == 1) {
+                            CreditAccount c = new CreditAccount("","","","", "", userEncontrado.userid, 500, 0, "credit");
+                            c.createBankAccount(tipo);
+                        }
+
+                        if (opcion == 2) {
+                            CreditAccount c = new CreditAccount("","","","", "", userEncontrado.userid, 1000, 0, "credit");
+                            c.createBankAccount(tipo);
+                        }
+
+                        if (opcion == 3) {
+                            CreditAccount c = new CreditAccount("","","","", "", userEncontrado.userid, 5000, 0, "credit");
+                            c.createBankAccount(tipo);
+                        }
+                    }
                     break;
                 case 5:
-                    break;
-                case 6:
                     break;
             }
         }
@@ -213,6 +262,17 @@ public class Employee extends Person implements Serializable {
 
         users.add(newUser);
 
+    }
+
+    public void habilitarUser(ArrayList<User> users) {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Introduce el id del usuario que deseas desbloquear: ");
+        String desbloquear = scan.nextLine();
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).userid.equals(desbloquear) && users.get(i).active==(false)) {
+                users.get(i).active=true;
+            }
+        }
     }
 
     /**

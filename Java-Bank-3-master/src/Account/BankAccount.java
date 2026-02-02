@@ -17,8 +17,8 @@ public abstract class BankAccount implements Serializable {
     // LISTA GLOBAL ÚNICA
     public static ArrayList<BankAccount> bankAccounts = new ArrayList<>();
 
-    public String entity = "9999";
-    public String office = "8888";
+    public static String entity = "9999";
+    public static String office = "8888";
     public String dc = "";
     public String accNumber = "";
     public String IBAN = "";
@@ -46,15 +46,15 @@ public abstract class BankAccount implements Serializable {
         return "Alias: " + accountAlias + " | IBAN: " + IBAN + " | Balance: " + balance + " | ID: " + userid;
     }
 
-    public static String calcDC(String entidad, String oficina, String cuenta) {
-        entidad = String.format("%04d", Integer.parseInt(entidad));
-        oficina = String.format("%04d", Integer.parseInt(oficina));
-        cuenta = String.format("%010d", Long.parseLong(cuenta));
+    public static String calcDC(String entity, String office, String accNumber) {
+        entity = String.format("%04d", Integer.parseInt("9999"));
+        office = String.format("%04d", Integer.parseInt("8888"));
+        accNumber = String.format("%010d", Long.parseLong(accNumber));
 
         int[] w1 = {4,8,5,10,9,7,3,6};
         int[] w2 = {1,2,4,8,5,10,9,7,3,6};
 
-        String bloque1 = entidad + oficina;
+        String bloque1 = entity + office;
         int suma1 = 0;
         for (int i = 0; i < 8; i++) suma1 += (bloque1.charAt(i) - '0') * w1[i];
         int r1 = suma1 % 11;
@@ -62,7 +62,7 @@ public abstract class BankAccount implements Serializable {
         if (d1 == 11) d1 = 0;
         else if (d1 == 10) d1 = 1;
 
-        String bloque2 = cuenta;
+        String bloque2 = accNumber;
         int suma2 = 0;
         for (int i = 0; i < 10; i++) suma2 += (bloque2.charAt(i) - '0') * w2[i];
         int r2 = suma2 % 11;
@@ -76,9 +76,9 @@ public abstract class BankAccount implements Serializable {
     public static String calcIBAN(String entity, String office, String accNumber) {
         String dc = calcDC(entity, office, accNumber);
 
-        entity = String.format("%04d", Integer.parseInt(entity));
-        office = String.format("%04d", Integer.parseInt(office));
-        accNumber = String.format("%010d", Long.parseLong(accNumber));
+        entity = String.format("%04d", Integer.parseInt("9999"));
+        office = String.format("%03d", Integer.parseInt("888"));
+        accNumber = String.format("%09d", Long.parseLong(accNumber));
 
         String bban = entity + office + dc + accNumber;
 
@@ -92,17 +92,9 @@ public abstract class BankAccount implements Serializable {
         return "ES" + cdStr + bban;
     }
 
-    public void createBankAccount() {
-        Scanner sc = new Scanner(System.in);
+    public void createBankAccount(String tipo) {
         NumAuto = bankAccounts.size();
-
-        System.out.println("Enter entity code (4 digits):");
-        entity = sc.nextLine();
-
-        System.out.println("Enter office code (4 digits):");
-        office = sc.nextLine();
-
-        DecimalFormat formato = new DecimalFormat("0000000000");
+        DecimalFormat formato = new DecimalFormat("000000000");
         accNumber = formato.format(NumAuto);
 
         dc = calcDC(entity, office, accNumber);

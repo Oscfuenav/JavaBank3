@@ -10,16 +10,20 @@ import static Account.registro.registros;
 
 public class DebitAccount extends BankAccount {
     public String userid = "";
+    public String tipo = "debit";
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public DebitAccount(String entity, String office, String accNumber, String dc, String IBAN, String accountAlias, String userid) {
+    public DebitAccount(String entity, String office, String accNumber, String dc, String IBAN, String accountAlias, String userid, String tipo) {
         super(entity, office, accNumber, dc, IBAN, accountAlias);
         this.userid = userid;
+        this.tipo = tipo;
     }
 
-    public DebitAccount(String entity, String office, String accNumber, String dc, String IBAN, String userid) {
+    public DebitAccount(String entity, String office, String accNumber, String dc, String IBAN, String userid, String tipo) {
         super(entity, office, accNumber, dc, IBAN, userid);
+        this.userid = userid;
+        this.tipo= tipo;
     }
 
     @Override
