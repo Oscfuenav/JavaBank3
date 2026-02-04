@@ -37,7 +37,7 @@ public class User extends Person implements Serializable {
         Scanner scan2 = new Scanner(System.in);
         int option = 0;
 
-        while(option != 6){
+        while(option != 7){
 
             System.out.println("\nWelcome " + name);
             System.out.println("1. Deposit");
@@ -45,7 +45,8 @@ public class User extends Person implements Serializable {
             System.out.println("3. Transfer");
             System.out.println("4. Recharge SIM");
             System.out.println("5. Ver Registros");
-            System.out.println("6. Log out");
+            System.out.println("6. Pagar deuda");
+            System.out.println("7. Log out");
             option = scan2.nextInt();
 
             switch (option){
@@ -109,9 +110,9 @@ public class User extends Person implements Serializable {
 
                     if (cuentaSeleccionada instanceof CreditAccount) {
                         CreditAccount credit = (CreditAccount) cuentaSeleccionada;
-
+                        DebitAccount debit = null;
                         balanceantes = credit.balance;
-                        credit.withdraw(sacar, credit);
+                        credit.withdraw(sacar, debit, credit);
                         balancedespues = credit.balance;
 
                         registro d = new registro(
@@ -121,9 +122,9 @@ public class User extends Person implements Serializable {
 
                     } else if (cuentaSeleccionada instanceof DebitAccount) {
                         DebitAccount debit = (DebitAccount) cuentaSeleccionada;
-
+                        CreditAccount credit = null;
                         balanceantes = debit.balance;
-                        debit.withdraw(sacar, debit);
+                        debit.withdraw(sacar, debit, credit);
                         balancedespues = debit.balance;
 
                         registro d = new registro(
@@ -195,6 +196,13 @@ public class User extends Person implements Serializable {
                     registro.toStringDepo2(enriqueIban);
                     break;
                 case 6:
+
+
+
+
+
+                    break;
+                case 7:
                     System.out.println("Logging out...");
                     break;
             }

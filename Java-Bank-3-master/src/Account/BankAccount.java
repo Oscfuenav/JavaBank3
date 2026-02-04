@@ -123,7 +123,7 @@ public abstract class BankAccount implements Serializable {
     }
 
     public abstract void deposit(int amount, BankAccount account);
-    public abstract void withdraw(int amount, BankAccount account);
+    public abstract void withdraw(int amount, DebitAccount account, CreditAccount credit);
     public abstract void transfer(double amount, BankAccount account);
     public abstract void rechargeSIM(int amount, BankAccount account);
     public abstract void selectAccount(User user);

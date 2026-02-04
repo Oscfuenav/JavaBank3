@@ -33,7 +33,7 @@ public class DebitAccount extends BankAccount {
     }
 
     @Override
-    public void withdraw(int amount, BankAccount account) {
+    public void withdraw(int amount, DebitAccount account, CreditAccount credit) {
         if (amount > account.balance) {
             System.out.println("Insufficient funds");
             return;

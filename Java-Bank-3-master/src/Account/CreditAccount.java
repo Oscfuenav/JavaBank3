@@ -39,16 +39,14 @@ public class CreditAccount extends BankAccount {
     }
 
     @Override
-    public void withdraw(int amount, BankAccount account) {
-        double available = account.balance + creditLimit;
-
-        if (amount > available) {
-            System.out.println("Insufficient funds.");
-            return;
-        }
-
-        account.balance -= amount;
-        System.out.println("Withdrawal successful.");
+    public void withdraw(int amount, DebitAccount account, CreditAccount credit) {
+            double available = credit.balance - amount;
+            if (available < 0) {
+                System.out.println("Mal");
+                return;
+            }
+            credit.balance -= amount;
+            System.out.println("Withdraw successful.");
     }
 
     @Override
@@ -66,4 +64,8 @@ public class CreditAccount extends BankAccount {
 
     @Override
     public void selectAccount(User user, ArrayList<BankAccount> bankAccounts) {}
+
+    public void pagarDeuda() {
+        System.out.println("Deuda credit is " + deudaCredit + "%");
+    }
 }
