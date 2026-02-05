@@ -42,7 +42,14 @@ public class CreditAccount extends BankAccount {
     public void withdraw(int amount, DebitAccount account, CreditAccount credit) {
             double available = credit.balance - amount;
             if (available < 0) {
-                System.out.println("Mal");
+                credit.deudaCredit += available*-1;
+                if(credit.deudaCredit > maxDeuda){
+                    System.out.println("Mal");
+                    credit.deudaCredit -= available*-1;
+                    return;
+                }
+                credit.balance=0;
+                System.out.println("Tienes " + credit.deudaCredit + " de deuda.");
                 return;
             }
             credit.balance -= amount;
