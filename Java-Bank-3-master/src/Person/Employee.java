@@ -1,9 +1,10 @@
 package Person;
 
-import Account.BankAccount;
-import Account.CreditAccount;
-import Account.DebitAccount;
-import Account.registro;
+import Account.*;
+import Seguros.CarInsurance;
+import Seguros.HealthInsurance;
+import Seguros.HomeInsurance;
+import Seguros.LifeInsurance;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -11,6 +12,8 @@ import java.time.Year;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static Account.BankAccount.bankAccounts;
+import static Account.Tarjetas.tarjetas;
 import static Person.User.users;
 
 /**
@@ -72,31 +75,40 @@ public class Employee extends Person implements Serializable {
     @Override
     public void accountMenu(User currentUser, ArrayList<registro>registros) {
         Scanner scan2 = new Scanner(System.in);
-        int option=0;
-        while(option!=5){
+        int option = 0;
+        while (option != 9) {
             System.out.println("Welcome " + name);
             System.out.println("1. Create Client");
-            System.out.println("2. Ver registros");
-            System.out.println("3. Transfer Money");
-            System.out.println("4. Create BankAccount");
-            System.out.println("5. Log Out");
-            System.out.println("Please enter your numbered choice (1, 2, 3, 4, 5 or 6)");
+            System.out.println("2. Create Employee");
+            System.out.println("3. Ver registros");
+            System.out.println("4. Desbloquear usuarios");
+            System.out.println("5. Recharge SIM card");
+            System.out.println("6. Create Bankaccount");
+            System.out.println("7. Create Card");
+            System.out.println("8. Create Insurance");
+            System.out.println("9. Log Out");
+
+            System.out.println("Please enter your numbered choice (1, 2, 3, 4, 5, 6, 7, 8 or 9)");
             option = scan2.nextInt();
-            switch (option){
+            switch (option) {
                 case 1:
                     clientRegister();
                     break;
-                //case 2:
-                    //break;
                 case 2:
+                    employeeRegister();
+                    break;
+                case 3:
                     System.out.println("\n--- REGISTROS ---");
                     for (registro r : registros) System.out.println(r);
                     registro.toStringTransferencia();
                     break;
-                case 3:
+                case 4:
                     habilitarUser(users);
                     break;
-                case 4:
+                case 5:
+                    System.out.println("SIM RECARGADA");
+                    break;
+                case 6:
                     Scanner sc = new Scanner(System.in);
                     System.out.println("Dime el id del usuario que quiere crear la cuenta: ");
                     String userid = sc.nextLine();
@@ -141,7 +153,49 @@ public class Employee extends Person implements Serializable {
                         }
                     }
                     break;
-                case 5:
+                case 7:
+                    Scanner scan = new Scanner(System.in);
+
+                    for (int i = 0; i < bankAccounts.size(); i++) {
+                        System.out.println((i+1) + ". " + bankAccounts.get(i).IBAN);
+                    }
+                    System.out.println("Escribe la cuenta al que deseas crearle una tarjeta.");
+                    String ibanElegido = scan.nextLine();
+                    BankAccount cuentaEncontrada = null;
+                    for (int i = 0; i < bankAccounts.size(); i++) {
+                        if (bankAccounts.get(i).IBAN.equals(ibanElegido)) {
+                            cuentaEncontrada = bankAccounts.get(i);
+                            Tarjetas tarjeta = new Tarjetas(cuentaEncontrada.IBAN);
+                            tarjetas.add(tarjeta);
+                            System.out.println("Tarjeta creada correctamente.");
+                        }
+                    }
+                    break;
+                case 8:
+                    Scanner scan5 = new Scanner(System.in);
+                    System.out.println("Elige que seguro quieres crear");
+                    System.out.println("1. Life insurance.");
+                    System.out.println("2. Home insurance.");
+                    System.out.println("3. Car insurance.");
+                    System.out.println("4. Health insurance.");
+                    int opcion = scan5.nextInt();
+                    if (opcion == 1) {
+                        LifeInsurance life = new LifeInsurance(0, null, null, null);
+                        life.menuLife();
+                    } else if (opcion == 2) {
+                        HomeInsurance casa = new HomeInsurance(0, null, null, null);
+                        casa.menuHome();
+                    } else if (opcion == 3) {
+                        CarInsurance coche = new CarInsurance(0, null, null, null);
+                        coche.menuCar();
+                    } else if (opcion == 4) {
+                        HealthInsurance health = new HealthInsurance(0, null, null, null);
+                        health.menuHealth();
+                    } else {
+                        System.out.println("Opcion invalida.");
+                    }
+                    break;
+                case 9:
                     break;
             }
         }

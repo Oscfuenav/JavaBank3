@@ -14,7 +14,7 @@ public abstract class BankAccount implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    // LISTA GLOBAL ÚNICA
+
     public static ArrayList<BankAccount> bankAccounts = new ArrayList<>();
 
     public static String entity = "9999";
@@ -24,7 +24,6 @@ public abstract class BankAccount implements Serializable {
     public String IBAN = "";
     public String accountAlias = "";
     public double balance = 0.0;
-
     int NumAuto = 0;
 
     public BankAccount(String entity, String office, String accNumber, String dc, String IBAN, String accountAlias, String userid) {
@@ -123,7 +122,7 @@ public abstract class BankAccount implements Serializable {
     }
 
     public abstract void deposit(int amount, BankAccount account);
-    public abstract void withdraw(int amount, DebitAccount account, CreditAccount credit);
+    public abstract void withdraw(int amount, DebitAccount account, CreditAccount credit,int sacar, int balanceantes);
     public abstract void transfer(double amount, BankAccount account);
     public abstract void rechargeSIM(int amount, BankAccount account);
     public abstract void selectAccount(User user);

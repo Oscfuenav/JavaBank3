@@ -10,14 +10,19 @@ import Person.GestionFicheros;
 import java.util.Scanner;
 
 import static Account.BankAccount.bankAccounts;
+import static Account.Tarjetas.tarjetas;
 import static Account.registro.registros;
 import static Person.Employee.employees;
 import static Person.Gerente.gerentes;
 import static Person.User.users;
+import static Seguros.CarInsurance.carInsurance;
+import static Seguros.HealthInsurance.healthInsurance;
+import static Seguros.HomeInsurance.homeInsurance;
+import static Seguros.LifeInsurance.lifeInsurance;
 
 public class AccessScreen {
 
-    Scanner sc = new Scanner(System.in);
+
 
     Gerente gerente = new Gerente(null, null, null, null);
     Employee employee = new Employee(null, null, null, null);
@@ -25,28 +30,26 @@ public class AccessScreen {
     public void menu() {
 
         boolean exit = false;
-
+        Scanner sc = new Scanner(System.in);
         while (!exit) {
             System.out.println("\n=== JAVA BANK ===");
             //System.out.println("1. Create Account");
             System.out.println("1. Log In");
             System.out.println("2. Close Application");
             System.out.print("Choose option: ");
-
             int option = sc.nextInt();
-            sc.nextLine(); // limpiar buffer
 
             switch (option) {
                 //case 1:
-                    //crearCuenta();
-                    //break;
+                //crearCuenta();
+                //break;
 
                 case 1:
                     login();
                     break;
 
                 case 2:
-                    GestionFicheros.guardarClientes(gerentes, employees, users, bankAccounts, registros);
+                    GestionFicheros.guardarClientes(gerentes, employees, users, bankAccounts, registros, tarjetas, lifeInsurance, homeInsurance, carInsurance, healthInsurance);
                     System.out.println("Data saved. Closing application...");
                     exit = true;
                     break;
@@ -58,6 +61,7 @@ public class AccessScreen {
     }
 
     public void login() {
+        Scanner sc = new Scanner(System.in);
         System.out.print("Enter user ID: ");
         String id = sc.nextLine();
 
@@ -110,6 +114,8 @@ public class AccessScreen {
     }
 
     public void crearCuenta() {
+        Scanner sc = new Scanner(System.in);
+
         System.out.println("\nCreate account for:");
         System.out.println("1. Gerente");
         System.out.println("2. Empleado");

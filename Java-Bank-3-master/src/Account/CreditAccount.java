@@ -1,9 +1,11 @@
 package Account;
 
 import Person.User;
-
+import java.util.Date;
 import java.io.Serial;
 import java.util.ArrayList;
+
+import static Account.registro.registros;
 
 public class CreditAccount extends BankAccount {
     public String userid = "";
@@ -12,9 +14,11 @@ public class CreditAccount extends BankAccount {
 
     double creditLimit = 0.0;
     double creditPercentage = 0.0;
-    double maxDeuda = 0;
-    double deudaCredit = 0.0;
+    public double maxDeuda = 0;
+    public double deudaCredit = 0.0;
     public String tipo = "credit";
+    public Date fecha;
+    public Boolean moroso;
 
     public CreditAccount(String entity, String office, String accNumber, String dc, String IBAN,
                          String accountAlias, String userid, double maxDeuda, double deudaCredit, String tipo) {
@@ -23,6 +27,7 @@ public class CreditAccount extends BankAccount {
         this.maxDeuda = maxDeuda;
         this.deudaCredit = deudaCredit;
         this.tipo = tipo;
+        this.fecha = new Date();
     }
 
     public CreditAccount(String entity, String office, String accNumber, String dc, String IBAN, String userid, double maxDeuda, double deudaCredit, String tipo) {
@@ -30,6 +35,7 @@ public class CreditAccount extends BankAccount {
         this.maxDeuda = maxDeuda;
         this.deudaCredit = deudaCredit;
         this.tipo = tipo;
+        this.fecha = new Date();
     }
 
     @Override
@@ -39,21 +45,26 @@ public class CreditAccount extends BankAccount {
     }
 
     @Override
-    public void withdraw(int amount, DebitAccount account, CreditAccount credit) {
-            double available = credit.balance - amount;
-            if (available < 0) {
-                credit.deudaCredit += available*-1;
-                if(credit.deudaCredit > maxDeuda){
-                    System.out.println("Mal");
-                    credit.deudaCredit -= available*-1;
-                    return;
-                }
-                credit.balance=0;
-                System.out.println("Tienes " + credit.deudaCredit + " de deuda.");
+    public void withdraw(int amount, DebitAccount account, CreditAccount credit,int sacar, int balanceantes) {
+        double available = credit.balance - amount;
+        if (available < 0) {
+            credit.deudaCredit += available*-1;
+            if(credit.deudaCredit > maxDeuda){
+                System.out.println("No tienes saldo suficiente");
+                credit.deudaCredit -= available*-1;
                 return;
             }
-            credit.balance -= amount;
-            System.out.println("Withdraw successful.");
+            credit.balance=0;
+            System.out.println("Tienes " + credit.deudaCredit + " de deuda.");
+            return;
+        }
+        credit.balance -= amount;
+        System.out.println("Withdraw successful.");
+        int balancedespues = (int) credit.balance;
+        registro d = new registro(
+                sacar, credit.IBAN, balancedespues, balanceantes, "Retiro", credit.userid,0
+        );
+        registros.add(d);
     }
 
     @Override

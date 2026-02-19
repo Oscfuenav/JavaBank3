@@ -33,13 +33,19 @@ public class DebitAccount extends BankAccount {
     }
 
     @Override
-    public void withdraw(int amount, DebitAccount account, CreditAccount credit) {
+    public void withdraw(int amount, DebitAccount account, CreditAccount credit,int sacar, int balanceantes) {
         if (amount > account.balance) {
             System.out.println("Insufficient funds");
-            return;
+            return ;
         }
         account.balance -= amount;
         System.out.println("Operation successful");
+        int balancedespues= (int) account.balance;
+        registro d = new registro(
+                sacar, account.IBAN, balancedespues, balanceantes, "Retiro", account.userid,0
+        );
+
+        registros.add(d);
     }
 
     @Override
@@ -74,7 +80,7 @@ public class DebitAccount extends BankAccount {
         destAcc.balance += amount;
         double balanceDespuesT= account.balance;
         double balanceDespuesR=destAcc.balance;
-        registro r=new registro(amount,IBAN, IBANR,balanceDespuesT,balanceAntesT,tipo,balanceDespuesR,balanceAntesR);
+        registro r=new registro(amount,IBAN, IBANR,balanceDespuesT,balanceAntesT,tipo,balanceDespuesR,balanceAntesR, account.userid);
         registros.add(r);
         System.out.println("Transfer successful.");
         registro.toStringTransferencia();
